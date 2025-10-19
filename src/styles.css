@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Poppins", sans-serif;
+  --font-sans: "Poppins", sans-serif;
+
+  --color-red: #DF0404;
+  --color-green: #008767;
+  --color-yellow: #FED766;
+  --color-purple: #5932EA;
+  --color-text-menu: #9197B3;
+  --color-text-para: #292D32;
+  --color-bg: #FAFBFF;
+}
+
+/* ตั้งค่า Tailwind ให้ใช้ font-medium กับฟอนต์ Poppins */
+.sidebar, .sidebar a {
+  font-family: var(--font-sans);
+  font-weight: 500; /* medium */
+}

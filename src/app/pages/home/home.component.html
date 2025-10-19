@@ -1,0 +1,16 @@
+<div class="flex h-screen bg-bg">
+  <app-sidebar></app-sidebar>
+  <div class="p-6">
+  <!-- <h2 class="text-2xl font-bold mb-4">Welcome, {{ admin?.name }}</h2> -->
+
+  <h3 class="text-xl font-semibold mb-2">Reports</h3>
+  <ul>
+    <li *ngFor="let report of reports" class="border p-2 mb-2 rounded">
+      <strong>{{ report.entity_name }}</strong> - {{ report.report_topic }}<br>
+      {{ report.description }} <br>
+      <small>{{ report.report_date | date:'short' }}</small>
+    </li>
+  </ul>
+</div>
+
+</div>
