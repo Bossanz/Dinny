@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class RiderService {
-    constructor(private http: HttpClient, private auth: AuthService) {}
+    constructor(private http: HttpClient, private auth: AuthService) { }
 
     private getHeaders(): HttpHeaders {
         const token = this.auth.getToken();
@@ -15,9 +15,13 @@ export class RiderService {
     getRiders(): Observable<any[]> {
         return this.http.get<any[]>(`${this.auth.apiUrl}/admin/riders`, { headers: this.getHeaders() });
     }
-        
+
     toggleBan(id: number): Observable<any> {
         return this.http.put(`${this.auth.apiUrl}/admin/riders/${id}/ban`, {}, { headers: this.getHeaders() });
+    }
+
+    verifyRider(id: number) {
+        return this.http.put(`${this.auth.apiUrl}/admin/riders/${id}/verify`, {}, { headers: this.getHeaders() });
     }
 
 }

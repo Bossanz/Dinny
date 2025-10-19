@@ -1,35 +1,141 @@
-<div class="flex h-screen bg-bg">
+<div class="flex min-h-[100vh] bg-bg">
+  <!-- Sidebar -->
   <app-sidebar></app-sidebar>
 
-  <main class="flex-1 p-10 m-10">
-    <div class="bg-white rounded-2xl shadow-md p-6">
-      <div class="p-6 grid grid-cols-2 grid-rows-2 gap-58 ">
-        <ul class="bg-yellow">
-          <li *ngFor="let report of reports" class="border p-2 mb-2 rounded">
-            <strong>{{ report.entity_name }}</strong> - {{ report.report_topic
-            }}<br />
-            {{ report.description }} <br />
-            <small>{{ report.report_date | date : "short" }}</small>
-          </li>
-        </ul>
-        <ul class="bg-green row-start-2">
-          <li *ngFor="let report of reports" class="border p-2 mb-2 rounded">
-            <strong>{{ report.entity_name }}</strong> - {{ report.report_topic
-            }}<br />
-            {{ report.description }} <br />
-            <small>{{ report.report_date | date : "short" }}</small>
-          </li>
-        </ul>
-        <ul class="bg-red row-span-2">
-          <li *ngFor="let report of reports" class="border p-2 mb-2 rounded">
-            <strong>{{ report.entity_name }}</strong> - {{ report.report_topic
-            }}<br />
-            {{ report.description }} <br />
-            <small>{{ report.report_date | date : "short" }}</small>
-          </li>
-        </ul>
+  <!-- Main Content -->
+  <main class="flex-1 flex justify-center items-start py-10 px-6">
+    <div class="grid grid-cols-[480px_1fr] gap-10 w-full max-w-[1200px]">
+
+      <!-- 🔹 ซ้าย: ตาราง + จำนวนผู้ใช้ -->
+      <div class="flex flex-col gap-8">
+        <!-- ตารางผู้ใช้ -->
+        <div class="bg-white rounded-2xl shadow-md p-6 max-h-[440px] w-[470px] flex flex-col">
+          <h2 class="text-xl font-semibold mb-4">Verify Rider</h2>
+
+          <div class="overflow-y-auto max-h-[340px]">
+            <table class="w-full text-left text-gray-700">
+              <thead class="sticky top-0 bg-white border-b">
+                <tr class="text-gray-600 text-sm">
+                  <th class="pb-3">Username</th>
+                  <th class="pb-3">Email</th>
+                  <th class="pb-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of riders" class="border-b hover:bg-gray-50 transition text-sm">
+                  <td class="py-3">{{ r.rid_name }}</td>
+                  <td class="py-3">{{ r.rid_email }}</td>
+                  <td class="py-3 text-right">
+                    <button class="bg-blue-100 text-blue-600 px-3 py-1 rounded-md hover:bg-blue-200 transition"
+                      (click)="openRiderDetail(r)">
+                      View
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- กล่อง Admin / Restaurants / Rider -->
+        <div class="bg-white rounded-2xl shadow-md p-6 max-h-[440px] w-[470px] flex flex-col justify-between">
+          <div class="grid grid-cols-1 gap-4 text-lg font-semibold">
+            <div class="flex items-center justify-between">
+              <span>Admin</span>
+              <input type="text" value="10" readonly class="w-20 text-center border rounded-md py-1 bg-gray-50" />
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Restaurants</span>
+              <input type="text" value="70" readonly class="w-20 text-center border rounded-md py-1 bg-gray-50" />
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Rider</span>
+              <input type="text" value="20" readonly class="w-20 text-center border rounded-md py-1 bg-gray-50" />
+            </div>
+          </div>
+          <div class="flex justify-end mt-6">
+            <button class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔹 ขวา: รายงานปัญหา -->
+      <div class="bg-white rounded-2xl shadow-md p-6 max-h-[890px] overflow-y-auto">
+        <h2 class="text-xl font-semibold mb-4">Reports</h2>
+        <div *ngFor="let report of reports"
+          class="border border-gray-200 rounded-xl p-4 mb-4 hover:shadow-md transition bg-white">
+          <div class="flex justify-between items-start">
+            <div>
+              <strong class="text-red-500">{{ report.entity_name }}</strong>
+              <small class="ml-2 text-gray-400">{{
+                report.report_date
+                }}</small>
+              <p class="font-medium text-gray-700 mt-1">
+                {{ report.report_topic }}
+              </p>
+              <p class="text-gray-500 text-sm">{{ report.description }}</p>
+            </div>
+            <button>
+              <i class="pi pi-external-link text-gray-500 hover:text-black"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </main>
+</div>
+
+<!-- 🔹 Popup Modal -->
+<div *ngIf="selectedRider" class="fixed inset-0 backdrop-blur-md bg-white/20 flex justify-center items-center z-50">
+  <div class="bg-white rounded-2xl shadow-2xl w-[480px] p-8 relative border border-gray-100">
+    <button class="absolute top-4 right-4 text-gray-400 hover:text-black text-xl" (click)="selectedRider = null">
+      ✕
+    </button>
+
+    <h2 class="text-2xl font-semibold mb-5 text-center">
+      Rider Details
+    </h2>
+
+    <div class="space-y-2 text-gray-700">
+      <p><strong>Name:</strong> {{ selectedRider.rid_name }}</p>
+      <p><strong>Rider ID:</strong> {{ selectedRider.rid_id }}</p>
+      <p><strong>Email:</strong> {{ selectedRider.rid_email }}</p>
+    </div>
+
+    <div class="mt-5">
+      <!-- Vehicle -->
+      <p class="font-medium text-gray-700 mb-2">Vehicle Image:</p>
+      <img [src]="selectedRider.rid_vehicle_image" alt="Vehicle"
+        class="rounded-xl mb-4 w-full h-[200px] object-contain border cursor-pointer"
+        (click)="openImage(selectedRider.rid_vehicle_image)" />
+
+      <!-- Driver License -->
+      <p class="font-medium text-gray-700 mb-2">Driver License:</p>
+      <img [src]="selectedRider.rid_driv_license_image" alt="License"
+        class="rounded-xl w-full h-[200px] object-contain border cursor-pointer"
+        (click)="openImage(selectedRider.rid_driv_license_image)" />
+
+    </div>
+
+    <!-- ปุ่ม Verify -->
+    <div class="flex justify-end gap-3 mt-6">
+      <button class="bg-gray-200 text-gray-700 px-5 py-2 rounded-md hover:bg-gray-300 transition"
+        (click)="selectedRider = null">
+        Close
+      </button>
+      <button class="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition"
+        (click)="verifyRider(selectedRider)">
+        Verify
+      </button>
+    </div>
+  </div>
+
+  <!-- Fullscreen Image -->
+  <div *ngIf="selectedImage" class="fixed inset-0 z-50 bg-black/80 flex justify-center items-center"
+    (click)="closeImage()">
+    <img [src]="selectedImage" alt="Full Screen" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl" />
+  </div>
 
 </div>
