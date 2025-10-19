@@ -90,7 +90,12 @@
       Rider
     </a>
   </nav>
-<footer class="mt-auto flex justify-end p-4">
+<footer class="mt-auto flex justify-between items-center p-4 bg-white shadow-md">
+  <div class="flex flex-col">
+    <span class="font-semibold text-gray-700">{{ ad[0]?.ad_name }}</span>
+    <span class="text-gray-500">Balance: {{ ad[0]?.ad_balance | currency:'THB':'symbol':'1.0-0' }}</span>
+  </div>
+  
   <button
     (click)="logout()"
     class="hover:bg-gray-100 rounded flex items-center justify-center transition-colors duration-200 h-[50px] w-[50px]"
@@ -111,6 +116,7 @@
     </svg>
   </button>
 </footer>
+
 
 
 
