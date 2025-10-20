@@ -38,12 +38,18 @@ export class HomeComponent {
     });
   }
 
-  loadReports() {
-    this.homeService.getReports().subscribe({
-      next: (res) => (this.reports = res),
-      error: (err) => console.error(err)
-    });
-  }
+loadReports() {
+  this.homeService.getReports().subscribe({
+    next: (res) => {
+      // เรียงจากวันที่ใหม่ -> เก่า
+      this.reports = res.sort((a: any, b: any) =>
+        new Date(b.report_date).getTime() - new Date(a.report_date).getTime()
+      );
+    },
+    error: (err) => console.error(err)
+  });
+}
+
 
   loadRider() {
     this.riderService.getRiders().subscribe({

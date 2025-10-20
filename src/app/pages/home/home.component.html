@@ -81,7 +81,7 @@
         <div *ngFor="let report of reports"
           class="border border-gray-200 rounded-xl p-4 mb-4 hover:shadow-md transition bg-white">
           <div class="flex justify-between items-start">
-            <div>
+            <div class="min-w-0">
               <strong class="text-red-500">{{ report.entity_name }}</strong>
               <small class="ml-2 text-gray-400">{{
                 report.report_date | date:'dd/MM/yyyy' 
@@ -89,7 +89,7 @@
               <p class="font-medium text-gray-700 mt-1">
                 {{ report.report_topic }}
               </p>
-              <p class="text-gray-500 text-sm">{{ report.description }}</p>
+              <p class="text-gray-500 text-sm truncate">{{ report.description }}</p>
             </div>
             <button class="p-1 rounded hover:bg-gray-100" (click)="openReport(report)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
