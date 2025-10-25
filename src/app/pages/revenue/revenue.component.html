@@ -1,0 +1,60 @@
+<div class="flex h-screen bg-bg">
+  <app-sidebar></app-sidebar>
+
+  <main class="flex-1 flex flex-col">
+    <!-- Header + Filter -->
+    <div class="flex justify-between items-center p-6 bg-white border-b">
+      <h2 class="text-2xl font-semibold">รายได้ตามบุคคล</h2>
+      <div class="flex gap-4">
+        <input
+          type="month"
+          [(ngModel)]="selectedMonth"
+          (change)="fetchRevenue()"
+          class="rounded-lg px-3 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <select [(ngModel)]="selectedType" class="rounded-lg px-3 py-2 text-sm border">
+          <option value="All">All</option>
+          <option value="Admin">Admin</option>
+          <option value="Restaurant">Restaurant</option>
+          <option value="Rider">Rider</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table container with scroll -->
+    <div class="flex-1 overflow-auto p-6 bg-white rounded-b-2xl">
+      <table class="w-full min-w-[700px] table-fixed">
+        <thead class="text-left text-sm text-gray-500 border-b sticky top-0 bg-white z-10">
+          <tr>
+            <th class="py-3 px-4">Type</th>
+            <th class="py-3 px-4">Name</th>
+            <th class="py-3 px-4 text-right">Income (บาท)</th>
+            <th class="py-3 px-4 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of filteredRevenues" class="border-b hover:bg-gray-50">
+            <td class="py-4 px-4">{{ r.type }}</td>
+            <td class="py-4 px-4">{{ r.name }}</td>
+            <td class="py-4 px-4 text-right">{{ r.income | number:'1.0-2' }}</td>
+            <td class="py-4 px-4 text-right">
+              <button
+                (click)="goToDetail(r)"
+                class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                ดูรายละเอียด
+              </button>
+            </td>
+          </tr>
+
+          <!-- Total -->
+          <tr class="font-semibold border-t bg-gray-50">
+            <td class="py-2 px-4" colspan="2">รวมทั้งหมด</td>
+            <td class="py-2 px-4 text-right">{{ getTotalIncome() | number:'1.0-2' }}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>

@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +8,7 @@ import { RestaurantService } from '../../services/restaurant.service';
 
 @Component({
   selector: 'app-restaurant',
-  imports: [CommonModule, RouterOutlet, SidebarComponent, FormsModule],
+  imports: [CommonModule, SidebarComponent, FormsModule],
   templateUrl: './restaurant.component.html',
   styleUrl: './restaurant.component.css'
 })
@@ -23,7 +22,7 @@ export class RestaurantComponent implements OnInit {
 
   // pagination
   currentPage = 1;
-  pageSize = 8;
+  pageSize = 10;
   totalPages = 1;
   totalEntries = 0;
 

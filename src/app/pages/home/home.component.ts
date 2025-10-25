@@ -92,19 +92,31 @@ loadReports() {
     this.selectedImage = null;
   }
 
-  saveShareRate() {
-    if (!this.ad[0]) return;
+ saveShareRate() {
+  if (!this.ad[0]) return;
 
-    const updatedData = {
-      ad_id: this.ad[0].ad_id,
-      ad_share_rate: this.ad[0].ad_share_rate,
-      res_share_rate: this.ad[0].res_share_rate,
-      rid_share_rate: this.ad[0].rid_share_rate
-    };
+  const adRate = Number(this.ad[0].ad_share_rate);
+  const resRate = Number(this.ad[0].res_share_rate);
+  const ridRate = Number(this.ad[0].rid_share_rate);
+  const total = adRate + resRate + ridRate;
 
-    this.homeService.updateShareRate(updatedData).subscribe({
-      next: () => alert('✅ Share rates saved successfully!'),
-      error: (err) => console.error('Error saving share rates', err)
-    });
+  // ตรวจสอบผลรวม
+  if (total !== 100) {
+    alert(`❌ ค่าสัดส่วนไม่ถูกต้อง`);
+    return;
   }
+
+  const updatedData = {
+    ad_id: this.ad[0].ad_id,
+    ad_share_rate: adRate,
+    res_share_rate: resRate,
+    rid_share_rate: ridRate
+  };
+
+  this.homeService.updateShareRate(updatedData).subscribe({
+    next: () => alert('✅ บันทึกค่าสัดส่วนเรียบร้อยแล้ว!'),
+    error: (err) => console.error('Error saving share rates', err)
+  });
+}
+
 };

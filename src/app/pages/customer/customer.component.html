@@ -3,69 +3,63 @@
 
   <main class="flex-1 p-10">
     <div class="bg-white rounded-2xl shadow-md p-6">
+      <!-- Header -->
       <div class="flex justify-between items-center mb-6">
-        <div>
-          <h2 class="text-2xl font-semibold">All Customers</h2>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <div class="relative">
-            <input
-              type="text"
-              [(ngModel)]="searchText"
-              (ngModelChange)="onSearchChange()"
-              placeholder="Search"
-              class="w-[390px] rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        <h2 class="text-2xl font-semibold">ลูกค้าทั้งหมด</h2>
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (ngModelChange)="onSearchChange()"
+            placeholder="Search"
+            class="w-[390px] rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
             />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-              />
-            </svg>
-          </div>
+          </svg>
         </div>
       </div>
 
-      <!-- table -->
+      <!-- Table -->
       <div class="overflow-x-auto">
-        <table class="w-full min-w-[900px]">
-          <thead class="text-left text-sm text-gray-500">
+        <table class="w-full min-w-[800px]">
+          <thead class="text-left text-sm text-gray-500 border-b">
             <tr>
-              <th class="py-3 px-4">Customer Username</th>
-              <th class="py-3 px-4">User ID</th>
-              <th class="py-3 px-4">Phone Number</th>
+              <th class="py-3 px-4">Username</th>
+              <th class="py-3 px-4">ID</th>
+              <th class="py-3 px-4">Phone</th>
               <th class="py-3 px-4">Email</th>
-              <th class="py-3 px-4">Address</th>
               <th class="py-3 px-4 text-center">Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let c of paginatedCustomers" class="border-t">
+            <tr *ngFor="let c of paginatedCustomers" class="border-b hover:bg-gray-50">
               <td class="py-4 px-4">{{ c.cus_name }}</td>
               <td class="py-4 px-4">{{ c.cus_id }}</td>
               <td class="py-4 px-4">{{ c.cus_phone }}</td>
               <td class="py-4 px-4">{{ c.cus_email }}</td>
-              <td class="py-4 px-4">{{ c.address || "-" }}</td>
               <td class="py-4 px-4 text-center">
                 <button
                   (click)="toggleBan(c.cus_id)"
-                  class="px-3 py-1 rounded-md text-sm font-medium border"
+                  class="px-3 py-1 rounded-md text-sm font-medium border transition"
                   [ngClass]="
                     c.cus_active_status === 1
-                      ? 'bg-emerald-100 text-green border-green'
-                      : 'bg-red-100 text-red border-red'
+                      ? 'bg-emerald-100 text-green-700 border-green-500 hover:bg-emerald-200'
+                      : 'bg-red-100 text-red-700 border-red-500 hover:bg-red-200'
                   "
                 >
-                  {{ c.cus_active_status === 1 ? "Active" : "Banned" }}
+                  {{ c.cus_active_status === 1 ? 'ใช้งานได้' : 'ถูกแบน' }}
                 </button>
               </td>
             </tr>
@@ -73,17 +67,14 @@
         </table>
       </div>
 
-      <!-- footer: showing text + pagination -->
-      <div class="flex items-center justify-between mt-6">
-        <div class="text-sm text-gray-500">
-          Showing data {{ (currentPage - 1) * pageSize + 1 }} to
-          {{
-            currentPage * pageSize < totalEntries
-              ? currentPage * pageSize
-              : totalEntries
-          }}
+      <!-- Footer -->
+      <div class="flex items-center justify-between mt-6 text-sm text-gray-500">
+        <span>
+          Showing data
+          {{ (currentPage - 1) * pageSize + 1 }} to
+          {{ currentPage * pageSize < totalEntries ? currentPage * pageSize : totalEntries }}
           of {{ totalEntries }} entries
-        </div>
+        </span>
 
         <div class="flex items-center gap-2">
           <button
@@ -98,7 +89,7 @@
             <button
               *ngIf="p !== '...'; else ell"
               (click)="setPage(p)"
-              [class]="
+              [ngClass]="
                 p === currentPage
                   ? 'px-3 py-1 rounded bg-indigo-600 text-white'
                   : 'px-3 py-1 rounded border'
@@ -106,9 +97,7 @@
             >
               {{ p }}
             </button>
-            <ng-template #ell>
-              <span class="px-2">…</span>
-            </ng-template>
+            <ng-template #ell><span class="px-2">…</span></ng-template>
           </ng-container>
 
           <button

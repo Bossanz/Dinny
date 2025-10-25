@@ -22,7 +22,7 @@ export class RiderComponent {
 
   // pagination
   currentPage = 1;
-  pageSize = 8;
+  pageSize = 10;
   totalPages = 1;
   totalEntries = 0;
 
