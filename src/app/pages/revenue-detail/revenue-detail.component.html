@@ -7,26 +7,72 @@
       <!-- Header -->
       <div class="flex justify-between items-center">
         <h2 class="text-2xl font-semibold">
-          คำสั่งซื้อของ {{ personType | titlecase }} ID: {{ personId }}
+          รายได้ของ {{ personType | titlecase }} ID: {{ personId }}
         </h2>
         <button (click)="goBack()" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
           ← กลับ
         </button>
       </div>
 
-      <!-- Month selector -->
-      <div class="flex items-center gap-4">
-        <label class="font-medium">เลือกเดือน:</label>
-        <input
-          type="month"
-          [(ngModel)]="selectedMonth"
-          (change)="fetchOrders()"
-          class="rounded-lg px-3 py-2 border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+      <!-- Filter controls -->
+      <div class="flex items-center gap-4 flex-wrap">
+        <!-- Filter Type Selector -->
+        <div class="flex items-center gap-2">
+          <label class="font-medium">ประเภทการกรอง:</label>
+          <select
+            [(ngModel)]="filterType"
+            (change)="onFilterTypeChange()"
+            class="rounded-lg px-3 py-2 border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="day">รายวัน</option>
+            <option value="month">รายเดือน</option>
+            <option value="year">รายปี</option>
+          </select>
+        </div>
+
+        <!-- Filter Value Input -->
+        <div class="flex items-center gap-2">
+          <label class="font-medium">เลือก{{ getFilterLabel() }}:</label>
+          
+          <!-- Day picker -->
+          <input
+            *ngIf="filterType === 'day'"
+            type="date"
+            [(ngModel)]="filterValue"
+            (change)="onFilterValueChange()"
+            class="rounded-lg px-3 py-2 border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          
+          <!-- Month picker -->
+          <input
+            *ngIf="filterType === 'month'"
+            type="month"
+            [(ngModel)]="filterValue"
+            (change)="onFilterValueChange()"
+            class="rounded-lg px-3 py-2 border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          
+          <!-- Year picker -->
+          <input
+            *ngIf="filterType === 'year'"
+            type="number"
+            [(ngModel)]="filterValue"
+            (change)="onFilterValueChange()"
+            min="2020"
+            max="2030"
+            class="rounded-lg px-3 py-2 border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-24"
+          />
+        </div>
+
+        <!-- Display summary -->
+        <div class="text-sm text-gray-600 ml-auto">
+          <span class="font-medium">{{ orders.length }}</span> รายการ
+          | รวม <span class="font-medium">{{ getTotalIncome() | number:'1.0-2' }}</span> บาท
+        </div>
       </div>
 
       <!-- Table container with vertical scroll -->
-      <div *ngIf="loading" class="text-gray-500 mt-2">Loading...</div>
+      <div *ngIf="loading" class="text-gray-500 mt-2">กำลังโหลด...</div>
 
       <div *ngIf="!loading && orders.length" class="flex-1 overflow-auto border border-gray-200 rounded">
         <table class="w-full min-w-[700px] table-auto">
@@ -34,27 +80,29 @@
             <tr>
               <th class="py-3 px-4">Order ID</th>
               <th class="py-3 px-4">วันที่</th>
+              <th class="py-3 px-4 text-right">ราคารวม (บาท)</th>
               <th class="py-3 px-4 text-right">รายได้ (บาท)</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let o of orders" class="border-t hover:bg-gray-50">
               <td class="py-2 px-4">{{ o.ord_id }}</td>
-              <td class="py-2 px-4">{{ o.ord_date | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="py-2 px-4">{{ o.ord_date | date:'dd/MM/yyyy HH:mm':'UTC' }}</td>
+              <td class="py-2 px-4 text-right">{{ o.total_order_price | number:'1.0-2' }}</td>
               <td class="py-2 px-4 text-right">{{ o.income | number:'1.0-2' }}</td>
             </tr>
 
             <!-- Total row -->
-            <tr class="font-semibold border-t bg-gray-50 sticky bottom-0">
-              <td class="py-2 px-4" colspan="2">รวมทั้งหมด</td>
-              <td class="py-2 px-4 text-right">{{ getTotalIncome() | number:'1.0-2' }}</td>
+            <tr class="font-semibold border-t-2 bg-gray-50 sticky bottom-0">
+              <td class="py-3 px-4" colspan="3">รวมทั้งหมด</td>
+              <td class="py-3 px-4 text-right">{{ getTotalIncome() | number:'1.0-2' }}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div *ngIf="!loading && orders.length === 0" class="text-gray-500 mt-4">
-        ไม่มีคำสั่งซื้อในเดือนนี้
+      <div *ngIf="!loading && orders.length === 0" class="text-gray-500 mt-4 text-center py-8">
+        ไม่มีคำสั่งซื้อใน{{ getFilterLabel() }}นี้
       </div>
     </div>
   </main>
